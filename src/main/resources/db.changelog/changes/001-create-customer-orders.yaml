@@ -1,0 +1,38 @@
+
+  databaseChangeLog:
+    - changeSet:
+        id: 001-create-customer-orders
+        author: your-name
+        changes:
+          - createTable:
+              tableName: customer_orders
+              columns:
+                - column:
+                    name: order_id
+                    type: UUID
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: customer_name
+                    type: TEXT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: order_description
+                    type: TEXT
+                - column:
+                    name: order_value
+                    type: DECIMAL(12,2)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: status
+                    type: TEXT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: order_date
+                    type: TIMESTAMP
+                    constraints:
+                      nullable: false
