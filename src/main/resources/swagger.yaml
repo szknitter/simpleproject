@@ -1,0 +1,136 @@
+openapi: 3.0.1
+info:
+  title: Customer Order API
+  description: API for managing customer orders
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /orders:
+    get:
+      summary: Get a list of orders
+      description: Retrieve all orders with optional filtering by status and date range.
+      parameters:
+        - name: status
+          in: query
+          description: Filter by order status
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          description: Filter by order date (start range)
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          description: Filter by order date (end range)
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: List of customer orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerOrderTO"
+
+    post:
+      summary: Create a new order
+      description: Create a new customer order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerOrderCreateTO"
+      responses:
+        "200":
+          description: Order successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerOrderTO"
+
+    put:
+      summary: Update an existing order
+      description: Update an existing customer order by providing the order ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerOrderTO"
+      responses:
+        "200":
+          description: Order successfully updated
+        "404":
+          description: Order not found
+
+  /orders/{orderId}:
+    delete:
+      summary: Delete an order
+      description: Delete an order by its ID.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: UUID of the order to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Order successfully deleted
+        "404":
+          description: Order not found
+
+components:
+  schemas:
+    CustomerOrderTO:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        customerName:
+          type: string
+          example: "John Doe"
+        orderDescription:
+          type: string
+          example: "A new product order"
+        orderValue:
+          type: number
+          format: double
+          example: 150.75
+        status:
+          type: string
+          example: "PENDING"
+        orderDate:
+          type: string
+          format: date-time
+          example: "2024-05-12T12:30:00Z"
+
+    CustomerOrderCreateTO:
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: "Jane Doe"
+        orderDescription:
+          type: string
+          example: "A special order for the customer"
+        orderValue:
+          type: number
+          format: double
+          example: 200.50
+        status:
+          type: string
+          example: "NEW"
